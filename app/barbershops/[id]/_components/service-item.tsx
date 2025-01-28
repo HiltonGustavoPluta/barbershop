@@ -13,6 +13,9 @@ import { generateDayTimeList } from "../_helpers/hours";
 import { format, setHours, setMinutes } from "date-fns";
 import { saveBooking } from "../_actions/save-booking";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 
 interface ServiceItemProps {
   service: Service
@@ -21,12 +24,14 @@ interface ServiceItemProps {
 }
 
 const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps) => {
+  const router = useRouter();
 
   const { data } = useSession()
 
   const [submitIsLoadind, setSubmitIsLoading] = useState<boolean>(false)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [hour, setHour] = useState<string | undefined>(undefined)
+  const [sheetIsOpen, setSheetIsOpen] = useState<boolean>(false)
 
   const handleBooking = () => {
     if (!isAuthenticated) {
@@ -67,6 +72,19 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
         userId: (data.user as any).id
       })
 
+      setSheetIsOpen(false)
+      setDate(undefined)
+      setHour(undefined)
+
+      toast("Reserva realizada com sucesso!", {
+        description: format(newDate, "'Para' dd 'de' MMMM 'às' HH':'mm'.'", {
+          locale: ptBR,
+        }),
+        action: {
+          label: "Visualizar",
+          onClick: () => router.push("/bookings"),
+        },
+      });
     } catch (error) {
       console.error(error)
     } finally {
@@ -98,7 +116,7 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
                   currency: "BRL"
                 }).format(service.price) }
               </p>
-              <Sheet>
+              <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
                 <SheetTrigger asChild>
                   <Button variant="secondary" onClick={handleBooking}>Reservar</Button> 
                 </SheetTrigger>
