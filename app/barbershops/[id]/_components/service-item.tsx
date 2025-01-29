@@ -35,20 +35,18 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
   const [sheetIsOpen, setSheetIsOpen] = useState<boolean>(false)
   const [dayBookings, setDayBookings] = useState<Booking[]>([])
 
-  console.log('dayBookings', dayBookings)
-
   useEffect(() => {
     const refreshAvailableHous = async () => {
 
       if(!date) {
         return
       }
-      const _dayBooking = await getDayBookings(date)
+      const _dayBooking = await getDayBookings(barbershop.id, date)
       setDayBookings(_dayBooking)
     }
 
     refreshAvailableHous()
-  }, [date])
+  }, [date, barbershop.id])
 
   const handleBooking = () => {
     if (!isAuthenticated) {
