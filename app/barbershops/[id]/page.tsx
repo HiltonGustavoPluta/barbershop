@@ -2,26 +2,29 @@ import { db } from "@/app/_lib/prisma";
 import BarbershopInfo from "./_components/barbershop-info";
 import ServiceItem from "./_components/service-item";
 import { getServerSession } from "next-auth";
-import { authOption } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/_lib/auth";
+import { notFound } from "next/navigation";
 
-interface BarberShopDetailsPropps {
-  params: {
-    id?: string;
-  };
+interface BarberShopDetailsProps {
+  params: Promise<{ id: string }>
 }
 
-const BarbershopDetailsPage = async  ({ params }: BarberShopDetailsPropps) => {
+const BarbershopDetailsPage = async  ({ params }: BarberShopDetailsProps) => {
+  const resolvedParams = await params;
+  const session = await getServerSession(authOptions)
 
-  const session = await getServerSession(authOption)
+  if (!resolvedParams?.id) {
+    return notFound(); // Melhor prática do Next.js para redirecionar
+  }
 
-  if(!params.id) {
+  if(!resolvedParams.id) {
     //TODO redirecionar para home page
     return null;
   }
 
   const barbershop = await db.barbershop.findUnique({
     where: {
-      id: params.id
+      id: resolvedParams.id
     },
     include: {
       services: true
@@ -30,7 +33,7 @@ const BarbershopDetailsPage = async  ({ params }: BarberShopDetailsPropps) => {
 
   if(!barbershop) {
      //TODO redirecionar para home page
-    return null
+    return notFound();
   }
 
   return ( 
@@ -38,11 +41,12 @@ const BarbershopDetailsPage = async  ({ params }: BarberShopDetailsPropps) => {
       <BarbershopInfo barbershop={barbershop} />
 
       <div className="px-5 flex flex-col gap-4 py-6">
+      
         { barbershop.services.map(( service ) => (
           <ServiceItem 
             key={service.id} 
             service={service} 
-            isAuthenticated={session?.user}
+            isAuthenticated={!!session?.user}
             barbershop={barbershop} 
           />
         ))}

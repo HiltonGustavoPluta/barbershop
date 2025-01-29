@@ -3,9 +3,9 @@ import Header from "@/components/header";
 import { redirect } from "next/navigation";
 import { db } from "../_lib/prisma";
 import BookingItem from "@/components/booking-item";
-import { authOptions } from "../_lib/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { authOptions } from "../_lib/auth";
 
 const BookingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -46,7 +46,7 @@ const BookingsPage = async () => {
       <Header />
 
       { confirmedBookings.length === 0 && finishedBookings.length === 0 ? (
-        <div className="px-5 py-6 flex flex-col gap-4 items-center">
+        <div className="px-5 py-6 flex flex-col gap-3 items-center">
           <h1 className="text-center font-bold">
             Você não possui nenhum agendamento.
           </h1>

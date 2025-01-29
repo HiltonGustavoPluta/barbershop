@@ -1,17 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 
-declare global {
-  var cachedPrisma: PrismaClient;
-}
+// Evita múltiplas instâncias do Prisma no ambiente de desenvolvimento
+const globalForPrisma = global as unknown as { prisma?: PrismaClient };
 
-let prisma: PrismaClient;
-if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient();
-} else {
-  if (!global.cachedPrisma) {
-    global.cachedPrisma = new PrismaClient();
-  }
-  prisma = global.cachedPrisma;
-}
+export const db = globalForPrisma.prisma ?? new PrismaClient();
 
-export const db = prisma;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = db;
+}

@@ -25,7 +25,7 @@ const SideMenu = () => {
             <div className="flex items-center gap-2">
               <Avatar> 
                 <AvatarImage src={data.user?.image ?? ""} />
-                <AvatarFallback>{data?.user?.name.split('')[0]}</AvatarFallback>
+                <AvatarFallback>  {data.user?.name ? data.user.name[0] : ""}</AvatarFallback>
               </Avatar>
               <h2 className="font-bold">{data.user.name}</h2>
             </div>
