@@ -4,7 +4,7 @@ import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon, UserIcon } from "lucide-
 import { SheetHeader, SheetTitle } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 
 const SideMenu = () => {
@@ -23,8 +23,9 @@ const SideMenu = () => {
       { data?.user ? (
           <div className="flex justify-between items-center px-5 py-6">
             <div className="flex items-center gap-2">
-              <Avatar>
+              <Avatar> 
                 <AvatarImage src={data.user?.image ?? ""} />
+                <AvatarFallback>{data?.user?.name.split('')[0]}</AvatarFallback>
               </Avatar>
               <h2 className="font-bold">{data.user.name}</h2>
             </div>

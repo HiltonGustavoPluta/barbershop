@@ -60,7 +60,7 @@ const BookingItem = ({ booking }: BookingItemProps) => {
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={booking.barbershop.imageUrl} />
 
-                  <AvatarFallback>A</AvatarFallback>
+                  <AvatarFallback>{booking.barbershop.name.split('')[0]}</AvatarFallback>
                 </Avatar>
 
                 <h3 className="text-sm">{booking.barbershop.name}</h3>
