@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Barbershop, Booking, Service } from "@prisma/client";
 import { ptBR } from "date-fns/locale";
 import { signIn, useSession } from "next-auth/react";
@@ -156,7 +156,7 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
                   <Button variant="secondary" onClick={handleBooking}>Reservar</Button> 
                 </SheetTrigger>
 
-                <SheetContent className="p-0">
+                <SheetContent className="p-0 w-screen">
                   <SheetHeader className="text-left px-5 py-6 border-b border-secondary">
                     <SheetTitle>Fazer Reserva</SheetTitle>
                   </SheetHeader>
@@ -261,10 +261,16 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
                       </CardContent>
                     </Card>
 
-                    <SheetFooter className="px-5">
+                    <SheetFooter className="flex-row gap-3 px-5">
+                      <SheetClose asChild>
+                        <Button className="w-full" variant="secondary">
+                          Voltar
+                        </Button>
+                      </SheetClose>
                       <Button 
                         disabled={!hour || !date || submitIsLoadind} 
                         onClick={handleBookingSubmit}
+                        className="w-full"
                       >
                         {submitIsLoadind 
                           ? <Loader2 className="h-4 w-4 animate-spin" /> 
@@ -272,7 +278,6 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
                         }
                       </Button>
                     </SheetFooter>
-
                   </div>
 
                 </SheetContent>

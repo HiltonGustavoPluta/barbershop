@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` antialiased dark`}
+        className={` antialiased dark overflow-x-hidden`}
       >
         <AuthProvider>
           {children}
